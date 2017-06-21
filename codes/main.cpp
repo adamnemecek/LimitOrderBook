@@ -6,15 +6,14 @@
 #include "snapshot.h"
 #include "output.h"
 
-const std::string inputFolder("..\\..\\NasdaqData\\");
-const std::string outputFolder("..\\..\\LimitOrderBookOutputs\\");
-const std::string fileName("S041813-v41");
-
 
 void Run(const std::vector<std::string>& stocks, const std::vector<Label>& labels, double until = 24*3600) {
-    BinaryFileParser parser(inputFolder + fileName + ".txt");
+	const std::string input_folder("..\\..\\NasdaqData\\");
+	const std::string output_folder("..\\..\\LimitOrderBookOutputs\\");
+	const std::string file_name("S041813-v41");
+    BinaryFileParser parser(input_folder + file_name + ".txt");
 	Snapshot snapshot(stocks);
-	std::string prefix = outputFolder + fileName;
+	std::string prefix = output_folder + file_name;
 	std::unordered_map<std::string, std::vector<std::unique_ptr<TSWriter>>> writers;
 	for (size_t i = 0; i < labels.size(); i++) 
 		for (auto stock : stocks) 
@@ -35,7 +34,7 @@ int main() {
 
 	const std::vector<std::string> stocks{ "SPY", "SDS" };
 	const std::vector<Label> labels{ MAX_BID, MIN_ASK, MAX_BID_VOL, MIN_ASK_VOL };
-	double until = 10 * 3600;
+	double until = 12 * 3600;
 	Run(stocks,labels,until);
 
 	clock_t t2 = clock();
