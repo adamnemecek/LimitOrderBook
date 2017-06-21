@@ -286,3 +286,6 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
+/LimitOrderBooks/LimitOrderBooks.sln
+/LimitOrderBooks/LimitOrderBooks.vcxproj
+/LimitOrderBooks/LimitOrderBooks.vcxproj.filters
