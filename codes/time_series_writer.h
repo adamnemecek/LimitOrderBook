@@ -17,7 +17,7 @@ public:
 protected:
 	std::string stock_;
 	Label label_;
-	ofstream out_;
+	std::ofstream out_;
 	Time last_update_time_;
 	TSWriter(std::string stock, Label label, std::string to_write_file) : stock_(stock), label_(label), out_(to_write_file), last_update_time_(-1) {}
 };
@@ -34,7 +34,7 @@ private:
 		if (last_update_time_ < 0 || new_value != value_) {
 			last_update_time_ = time;
 			value_ = new_value;
-			out_ << to_string(last_update_time_) << " " << to_string(value_) << endl;
+			out_ << std::to_string(last_update_time_) << " " << std::to_string(value_) << "\n";
 		}
 	}
 };

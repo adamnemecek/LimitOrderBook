@@ -1,10 +1,8 @@
-
 #ifndef MESSAGE_H
 #define MESSAGE_H
 #pragma once
 #include <string>
 
-using namespace std;
 typedef uint64_t OrderRef;
 
 class Message
@@ -17,7 +15,7 @@ public:
 	virtual OrderRef Ref() const {return 0;}
 	virtual char BSInd() const { return 'N'; }
 	virtual int32_t Volume() const { return 0; }
-	virtual string Stock() const { return ""; }
+	virtual std::string Stock() const { return ""; }
 	virtual double Price() const { return -1; }
 	virtual OrderRef NewRef() const { return 0; }
 protected:
@@ -33,15 +31,15 @@ private:
 	OrderRef order_ref_;
 	char BS_ind_;
 	int32_t volume_;
-	string stock_;
+	std::string stock_;
 	double price_;
 public:
-	MessageA(double time, OrderRef order_ref, char BS_ind, int32_t volume, string stock, double price) :
+	MessageA(double time, OrderRef order_ref, char BS_ind, int32_t volume, std::string stock, double price) :
 		Message('A',time), order_ref_(order_ref), BS_ind_(BS_ind), volume_(volume), stock_(stock), price_(price) {}
 	OrderRef Ref() const { return order_ref_; }
 	char BSInd() const { return BS_ind_; }
 	int32_t Volume() const { return volume_; }
-	string Stock() const { return stock_; }
+	std::string Stock() const { return stock_; }
 	double Price() const{ return price_; }
 };
 
@@ -49,13 +47,13 @@ class MessageF : public MessageA
 	// add order w. MPID
 {
 private:
-	string mpid_;
+	std::string mpid_;
 public:
-	MessageF(double time, OrderRef order_ref, char BS_ind, int32_t volume, string stock, double price, string mpid) :
+	MessageF(double time, OrderRef order_ref, char BS_ind, int32_t volume, std::string stock, double price, std::string mpid) :
 		MessageA(time, order_ref, BS_ind, volume, stock, price), mpid_(mpid) {
 		type_ = 'F';
 	}
-	string Mpid() const { return mpid_; }
+	std::string Mpid() const { return mpid_; }
 };
 
 class MessageD : public Message

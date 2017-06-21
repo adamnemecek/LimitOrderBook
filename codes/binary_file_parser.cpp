@@ -51,13 +51,13 @@ int32_t BinaryFileParser::ReadVolume() {
 	return GetInt32();
 }
 
-string BinaryFileParser::ReadStock() {
+std::string BinaryFileParser::ReadStock() {
 	bin_.read(buffer_, 8);
 	for (int i = 0; i < kBufferSize; i++) if (isspace(buffer_[i])) {
 		buffer_[i] = '\0'; break;
 	}
 	buffer_[8] = '\0';
-	return string(buffer_);
+	return std::string(buffer_);
 }
 
 double BinaryFileParser::ReadPrice() {
@@ -65,13 +65,13 @@ double BinaryFileParser::ReadPrice() {
 	return (double)GetInt32() / kPriceScale;
 }
 
-string BinaryFileParser::ReadMpid() {
+std::string BinaryFileParser::ReadMpid() {
 	bin_.read(buffer_, 4);
 	buffer_[4] = '\0';
-	return string(buffer_);
+	return std::string(buffer_);
 }
 
-unique_ptr<Message> BinaryFileParser::ReadMessage() {
+std::unique_ptr<Message> BinaryFileParser::ReadMessage() {
 	bin_.read(buffer_, 1);
 	unsigned char messageLength = (unsigned char)ReadChar();
 	char messageType = ReadChar();
@@ -84,26 +84,26 @@ unique_ptr<Message> BinaryFileParser::ReadMessage() {
 		OrderRef orderRef = ReadRef();
 		char BSInd = ReadChar();
 		int32_t volume = ReadVolume();
-		string stock = ReadStock();
+		std::string stock = ReadStock();
 		double price = ReadPrice();
-		return unique_ptr<Message>(new MessageA(time, orderRef, BSInd, volume, stock, price));
+		return std::unique_ptr<Message>(new MessageA(time, orderRef, BSInd, volume, stock, price));
 	}
 	case 'F': {
 		double time = ReadTime();
 		OrderRef orderRef = ReadRef();
 		char BSInd = ReadChar();
 		int32_t volume = ReadVolume();
-		string stock = ReadStock();
+		std::string stock = ReadStock();
 		double price = ReadPrice();
-		string mpid = ReadMpid();
-		return unique_ptr<Message>(new MessageF(time, orderRef, BSInd, volume, stock, price, mpid));
+		std::string mpid = ReadMpid();
+		return std::unique_ptr<Message>(new MessageF(time, orderRef, BSInd, volume, stock, price, mpid));
 	}
 	case 'E': {
 		double time = ReadTime();;
 		OrderRef orderRef = ReadRef();
 		int32_t volume = ReadVolume();
 		OrderRef executionRef = ReadRef();
-		return unique_ptr<Message>(new MessageE(time, orderRef, volume, executionRef));
+		return std::unique_ptr<Message>(new MessageE(time, orderRef, volume, executionRef));
 	}
 	case 'C': {
 		double time = ReadTime();;
@@ -112,18 +112,18 @@ unique_ptr<Message> BinaryFileParser::ReadMessage() {
 		OrderRef executionRef = ReadRef();
 		char printable = ReadChar();
 		double executionPrice = ReadPrice();
-		return unique_ptr<Message>(new MessageC(time, orderRef, volume, executionRef, printable, executionPrice));
+		return std::unique_ptr<Message>(new MessageC(time, orderRef, volume, executionRef, printable, executionPrice));
 	}
 	case 'X': {
 		double time = ReadTime();;
 		OrderRef orderRef = ReadRef();
 		int32_t volume = ReadVolume();
-		return unique_ptr<Message>(new MessageX(time, orderRef, volume));
+		return std::unique_ptr<Message>(new MessageX(time, orderRef, volume));
 	}
 	case 'D': {
 		double time = ReadTime();;
 		OrderRef orderRef = ReadRef();
-		return unique_ptr<Message>(new MessageD(time, orderRef));
+		return std::unique_ptr<Message>(new MessageD(time, orderRef));
 	}
 	case 'U': {
 		double time = ReadTime();;
@@ -131,10 +131,10 @@ unique_ptr<Message> BinaryFileParser::ReadMessage() {
 		OrderRef newOrderRef = ReadRef();
 		int32_t volume = ReadVolume();
 		double price = ReadPrice();
-		return unique_ptr<Message>(new MessageU(time, orderRef, newOrderRef, volume, price));
+		return std::unique_ptr<Message>(new MessageU(time, orderRef, newOrderRef, volume, price));
 	}
 	default: Read(messageLength);
 	}
-	return unique_ptr<Message>(nullptr);
+	return std::unique_ptr<Message>(nullptr);
 }
 

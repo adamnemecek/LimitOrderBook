@@ -34,11 +34,11 @@ int main() {
 	clock_t t1 = clock();
 
 	const std::vector<std::string> stocks{ "SPY", "SDS" };
-	const vector<Label> labels{ MAX_BID, MIN_ASK, MAX_BID_VOL, MIN_ASK_VOL };
+	const std::vector<Label> labels{ MAX_BID, MIN_ASK, MAX_BID_VOL, MIN_ASK_VOL };
 	double until = 10 * 3600;
 	Run(stocks,labels,until);
 
 	clock_t t2 = clock();
-	cout << ((double)t2 - (double)t1) / CLOCKS_PER_SEC << " seconds\n";
+	std::cout << ((double)t2 - (double)t1) / CLOCKS_PER_SEC << " seconds\n";
 	return 0;
 }

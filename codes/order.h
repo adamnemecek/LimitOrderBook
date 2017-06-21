@@ -5,19 +5,18 @@
 #include <string>
 #include <assert.h>
 #include <memory>
-using namespace std;
 
 class Order
 {
 private:
 	const char BS_ind_;
 	int volume_;
-	const string stock_;
+	const std::string stock_;
 	const double price_;
-	const list<OrderRef>::iterator lit_;
+	const std::list<OrderRef>::iterator lit_;
 
 public:
-	Order(char BSInd, int volume, const string& stock, double price, const list<OrderRef>::iterator& listIt) :
+	Order(char BSInd, int volume, const std::string& stock, double price, const std::list<OrderRef>::iterator& listIt) :
 		BS_ind_(BSInd), volume_(volume), stock_(stock), price_(price), lit_(listIt) { assert(BS_ind_ == 'B' || BS_ind_ == 'S'); };
 
 	char BSInd() const { 
@@ -28,7 +27,7 @@ public:
 		return volume_; 
 	}
 
-	string Stock() const { 
+	std::string Stock() const {
 		return stock_; 
 	}
 
@@ -36,7 +35,7 @@ public:
 		return price_; 
 	}
 
-	list<OrderRef>::iterator ListIt() const {
+	std::list<OrderRef>::iterator ListIt() const {
 		return lit_;
 	}
 
