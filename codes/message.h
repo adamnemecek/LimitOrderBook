@@ -123,7 +123,7 @@ public:
 		Message('U', time), order_ref_(order_ref), new_order_ref_(new_order_ref), volume_(volume), price_(price) {};
 	~MessageU() {};
 	OrderRef Ref() const { return order_ref_; }
-	OrderRef NewOrderRef() const { return new_order_ref_; }
+	OrderRef NewRef() const { return new_order_ref_; }
 	int32_t Volume() const { return volume_; }
 	double Price() const { return price_; }
 };

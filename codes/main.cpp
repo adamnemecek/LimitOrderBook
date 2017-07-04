@@ -6,25 +6,34 @@
 #include "snapshot.h"
 #include "output.h"
 
+std::ostream& operator<< (std::ostream& ost, const Message& m) {
+	const std::string pre = " | ";
+	ost << pre << "Time: " << m.Time();
+	ost << pre << "Type: " << m.Type();
+	ost << pre << "ind: " << m.BSInd();
+	ost << pre << "Ref: " << m.Ref();
+	ost << pre << "NewRef: " << m.NewRef();
+	ost << "\n";
+	return ost;
+}
 
-void Run(const std::vector<std::string>& stocks, const std::vector<Label>& labels, double until, bool observe_dup_value = true) {
+void Run(std::initializer_list<std::string> stocks, std::initializer_list<Label> labels, double until, bool w_dup = true) {
 	const std::string input_folder("..\\..\\NasdaqData\\");
 	const std::string output_folder("..\\outputs\\");
-	const std::string file_name("S041813-v41");
+	const std::string file_name("S080613-v41");
     BinaryFileParser parser(input_folder + file_name + ".txt");
 	Snapshot snapshot(stocks);
-	std::string prefix = output_folder + file_name;
+	std::string prefix = output_folder;
 	std::unordered_map<std::string, std::vector<std::unique_ptr<TSWriter>>> writers;
-	for (size_t i = 0; i < labels.size(); i++) 
+	for (auto label : labels) 
 		for (auto stock : stocks) 
-			writers[stock].emplace_back(Output::NewTSWriter(stock, labels[i], 
-														   prefix + "_" + stock + "_" + Output::LabelStr(labels[i]) + ".txt", observe_dup_value));
+			writers[stock].emplace_back(Output::NewTSWriter(stock, label, prefix + stock + "_" + Output::LabelStr(label) + ".txt", w_dup));
 	while (!parser.IsEnd() && parser.GetSecond() <= until) {
 		std::unique_ptr<Message> pmessage = parser.ReadMessage();
 		if (pmessage) {
-			auto p = snapshot.ProcessMessage(pmessage.get());
-			if (p.first) 
-				for (auto &writer : writers[p.second]) Output::Update(writer.get(), &snapshot);
+			std::string stock = snapshot.ProcessMessage(pmessage.get());
+			if (stock != "")
+				for (auto &writer : writers[stock]) Output::Update(writer.get(), &snapshot);
 		}
 	}
 }
@@ -32,10 +41,8 @@ void Run(const std::vector<std::string>& stocks, const std::vector<Label>& label
 int main() {
 	clock_t t1 = clock();
 
-	const std::vector<std::string> stocks{ "SPY", "SDS" };
-	const std::vector<Label> labels{ MAX_BID, MIN_ASK, MAX_BID_VOL, MIN_ASK_VOL };
 	double until = 12 * 3600;
-	Run(stocks,labels,until,false);
+	Run({ "SPY", "SDS" }, { MAX_BID, MIN_ASK, MAX_BID_VOL, MIN_ASK_VOL },until,false);
 
 	clock_t t2 = clock();
 	std::cout << ((double)t2 - (double)t1) / CLOCKS_PER_SEC << " seconds\n";

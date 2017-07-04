@@ -5,42 +5,32 @@
 #include <string>
 #include <assert.h>
 #include <memory>
+#include "book.h"
 
 class Order
 {
-private:
-	const char BS_ind_;
 	int volume_;
-	const std::string stock_;
-	const double price_;
-	const std::list<OrderRef>::iterator lit_;
 
 public:
-	Order(char BSInd, int volume, const std::string& stock, double price, const std::list<OrderRef>::iterator& listIt) :
-		BS_ind_(BSInd), volume_(volume), stock_(stock), price_(price), lit_(listIt) { assert(BS_ind_ == 'B' || BS_ind_ == 'S'); };
+	const char BS_ind_;
+	const double price_;
+	Book* const pbook_;
+	const std::list<OrderRef>::iterator lit_;
 
-	char BSInd() const { 
-		return BS_ind_; 
-	}
+	Order(char BSInd, int volume, double price, Book* pbook, std::list<OrderRef>::iterator& lit) :
+		BS_ind_(BSInd), volume_(volume), price_(price), pbook_(pbook), lit_(lit) {}
 
 	int Volume() const { 
 		return volume_; 
 	}
 
 	std::string Stock() const {
-		return stock_; 
+		return pbook_->stock_; 
 	}
 
-	double Price() const { 
-		return price_; 
-	}
-
-	std::list<OrderRef>::iterator ListIt() const {
-		return lit_;
-	}
-
-	void DecreaseVolume(int to_decr) {
-		volume_ -= to_decr;
+	// decrease and return volume_
+	int DecrVol(int to_decr) {
+		return volume_ -= to_decr;
 	}
 };
 

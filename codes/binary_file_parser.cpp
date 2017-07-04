@@ -53,9 +53,10 @@ int32_t BinaryFileParser::ReadVolume() {
 
 std::string BinaryFileParser::ReadStock() {
 	bin_.read(buffer_, 8);
-	for (int i = 0; i < kBufferSize; i++) if (isspace(buffer_[i])) {
-		buffer_[i] = '\0'; break;
-	}
+	for (size_t i = 0; i < kBufferSize; i++) 
+		if (isspace(buffer_[i])) {
+		    buffer_[i] = '\0'; break;
+	    }
 	buffer_[8] = '\0';
 	return std::string(buffer_);
 }
