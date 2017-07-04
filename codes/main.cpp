@@ -7,9 +7,9 @@
 #include "output.h"
 
 
-void Run(const std::vector<std::string>& stocks, const std::vector<Label>& labels, double until = 24*3600) {
+void Run(const std::vector<std::string>& stocks, const std::vector<Label>& labels, double until, bool observe_dup_value = true) {
 	const std::string input_folder("..\\..\\NasdaqData\\");
-	const std::string output_folder("..\\..\\LimitOrderBookOutputs\\");
+	const std::string output_folder("..\\outputs\\");
 	const std::string file_name("S041813-v41");
     BinaryFileParser parser(input_folder + file_name + ".txt");
 	Snapshot snapshot(stocks);
@@ -18,7 +18,7 @@ void Run(const std::vector<std::string>& stocks, const std::vector<Label>& label
 	for (size_t i = 0; i < labels.size(); i++) 
 		for (auto stock : stocks) 
 			writers[stock].emplace_back(Output::NewTSWriter(stock, labels[i], 
-														   prefix + "_" + stock + "_" + Output::LabelStr(labels[i]) + ".txt"));
+														   prefix + "_" + stock + "_" + Output::LabelStr(labels[i]) + ".txt", observe_dup_value));
 	while (!parser.IsEnd() && parser.GetSecond() <= until) {
 		std::unique_ptr<Message> pmessage = parser.ReadMessage();
 		if (pmessage) {
@@ -35,7 +35,7 @@ int main() {
 	const std::vector<std::string> stocks{ "SPY", "SDS" };
 	const std::vector<Label> labels{ MAX_BID, MIN_ASK, MAX_BID_VOL, MIN_ASK_VOL };
 	double until = 12 * 3600;
-	Run(stocks,labels,until);
+	Run(stocks,labels,until,false);
 
 	clock_t t2 = clock();
 	std::cout << ((double)t2 - (double)t1) / CLOCKS_PER_SEC << " seconds\n";

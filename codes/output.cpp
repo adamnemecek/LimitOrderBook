@@ -10,12 +10,12 @@ std::string Output::LabelStr(const Label& label) {
 	return "";
 }
 
-TSWriter* Output::NewTSWriter(std::string stock, Label label, std::string towrite_file) {
+TSWriter* Output::NewTSWriter(std::string stock, Label label, std::string towrite_file, bool observe_dup_value) {
 	switch (label) {
 	case MAX_BID:
-	case MIN_ASK: return new TypedTSWriter<double>(stock, label, towrite_file);
+	case MIN_ASK: return new TypedTSWriter<double>(stock, label, towrite_file, observe_dup_value);
 	case MAX_BID_VOL:
-	case MIN_ASK_VOL: return new TypedTSWriter<int>(stock, label, towrite_file);
+	case MIN_ASK_VOL: return new TypedTSWriter<int>(stock, label, towrite_file, observe_dup_value);
 	}
 	return nullptr;
 }

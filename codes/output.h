@@ -14,7 +14,7 @@ struct Output {
 
 	static std::string LabelStr(const Label& label);
 	static void Update(TSWriter* writer, const Snapshot* snapshot);
-	static TSWriter* NewTSWriter(std::string stock, Label label, std::string towrite_file);
+	static TSWriter* NewTSWriter(std::string stock, Label label, std::string towrite_file, bool observe_dup_value = true);
 
 };
 
