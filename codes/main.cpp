@@ -41,7 +41,7 @@ void Run(std::initializer_list<std::string> stocks, std::initializer_list<Label>
 int main() {
 	clock_t t1 = clock();
 
-	double until = 12 * 3600;
+	double until = 24 * 3600;
 	Run({ "SPY", "SDS" }, { MAX_BID, MIN_ASK, MAX_BID_VOL, MIN_ASK_VOL },until,false);
 
 	clock_t t2 = clock();

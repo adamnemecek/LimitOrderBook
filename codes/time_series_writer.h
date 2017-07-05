@@ -2,6 +2,7 @@
 #define TIME_SERIES_WRITER
 #include <string>
 #include <fstream>
+#include <boost/lexical_cast.hpp>
 #include "snapshot.h"
 
 typedef double Time;
@@ -35,7 +36,7 @@ private:
 		if (observe_dup_value_ || last_update_time_ < 0 || new_value != value_) {
 			last_update_time_ = time;
 			value_ = new_value;
-			out_ << std::to_string(last_update_time_) << " " << std::to_string(value_) << "\n";
+			out_ << boost::lexical_cast<std::string>(last_update_time_) << " " << std::to_string(value_) << "\n";
 		}
 	}
 };
